@@ -37,6 +37,27 @@ Open `http://localhost:5050` in your browser. See [Installation](#installation) 
 
 ---
 
+## Docker
+
+To run INTERCEPT using Docker, first ensure you have Docker installed.
+
+1.  **Build the Docker Image:**
+    ```bash
+    docker build -t intercept-app .
+    ```
+2.  **Run the Docker Container:**
+    ```bash
+    docker run -d -p 5050:5050 --name intercept-app-instance intercept-app
+    ```
+    This will run the application in a detached mode and map port `5050` from the container to your host.
+
+3.  **Access the Application:**
+    Open `http://localhost:5050` in your browser.
+
+    > **Note:** The Docker container includes most of the necessary external tools, but for full SDR hardware functionality, you may need to ensure your host system has the appropriate drivers and permissions for USB device access (e.g., udev rules for RTL-SDR).
+
+---
+
 ## Quick Start WITH UV
 
 ```bash
@@ -471,5 +492,24 @@ By using INTERCEPT, you acknowledge that:
 - The developers assume no liability for misuse of this software
 
 A disclaimer must be accepted when first launching the application.
+
+## Changelog
+
+### Version 0.1.0 (2026-01-02) - Dockerization
+
+- Initial Dockerization of the INTERCEPT application.
+- Created a multi-stage `Dockerfile` to build and package the application and its dependencies.
+- Integrated the following system dependencies into the Docker image:
+    - **Pager Decoding:** `rtl_fm`, `multimon-ng`, `rtl_test`
+    - **433MHz Sensors:** `rtl_433`
+    - **WiFi Reconnaissance:** `airmon-ng`, `airodump-ng`, `aireplay-ng`, `aircrack-ng`, `hcxdumptool` (built from source), `hcxpcapngtool` (built from source)
+    - **Bluetooth Scanning:** `hcitool`, `bluetoothctl`, `hciconfig`
+    - **Aircraft Tracking (ADS-B):** `dump1090` (built from source as `dump1090-fa`), `rtl_adsb`
+    - **Satellite Tracking:** `skyfield` (Python package)
+    - **SDR Hardware Support:** `SoapySDRUtil`, `LimeUtil`, `hackrf_info`
+- Resolved build issues for `hcxdumptool`, `hcxtools`, and `dump1090-fa` by building them from source in a multi-stage Docker build.
+- Ensured Python dependencies (`flask`, `skyfield`) are installed.
+- Provided instructions for building and running the Docker container.
+
 
 
